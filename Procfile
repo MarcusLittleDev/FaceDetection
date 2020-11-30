@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: waitress-serve --port=9090 app.wsgi:application

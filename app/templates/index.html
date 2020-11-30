@@ -149,6 +149,56 @@
                 height: 50%;
             }
         }
+
+        #overlay {        
+            height: 100%;
+            width: 100%;
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow-x: hidden;
+            transition: 0.5s;
+        }
+
+        .overlay-content {
+            position: relative;
+            top: 50%;
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            font-size: 30px;
+        }
+
+        @keyframes blink {
+            0% {
+            opacity: .2;
+            }
+            20% {
+            opacity: 1;
+            }
+            100% {
+            opacity: .2;
+            }
+        }
+
+        .loading span {
+            animation-name: blink;
+            animation-duration: 1.4s;
+            animation-iteration-count: infinite;
+            animation-fill-mode: both;
+        }
+
+        .loading span:nth-child(2) {
+            animation-delay: .2s;
+        }
+
+        .loading span:nth-child(3) {
+            animation-delay: .4s;
+        }
     </style>
 </head>
 
@@ -182,6 +232,12 @@
                 You may have to remove any headphones or glasses and take the photo in decent lighting for better
                 results.
             </p>
+        </div>
+    </div>
+
+    <div id="overlay">
+        <div class="overlay-content">
+            <p class="loading">Processing<span>.</span><span>.</span><span>.</span></p>
         </div>
     </div>
 
@@ -237,7 +293,8 @@
         function snapShot() {
             //drawing = false;
             var pic = canvas.toDataURL('image/webp')
-            var post = $.ajax({
+            document.getElementById("overlay").style.display = "block";
+            return $.ajax({
                 type: "GET",
                 url: "/process_image",
                 data: {
@@ -249,6 +306,9 @@
                     img.removeAttribute("style")
                     img.src = "data:image/png;base64," + image;
                 }
+            })
+            .always(function() {
+                document.getElementById("overlay").style.display = "none";
             })
         }
 
