@@ -1,1 +1,1 @@
-web: waitress-serve --port=9090 app.wsgi:application
+web: gunicorn FaceDetection:app --limit-request-line 0
