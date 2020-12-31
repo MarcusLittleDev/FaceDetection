@@ -9,8 +9,8 @@ def index():
     return render_template('index.html', title='Face Detection')
 
 
-@app.route('/process_image/', methods=['POST'])
+@app.route('/process_image/', methods=['GET'])
 def process_image():
 
-    image = request.form['image']
+    image = request.args['image']
     return detect_face(image)
