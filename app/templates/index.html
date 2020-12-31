@@ -199,6 +199,10 @@
         .loading span:nth-child(3) {
             animation-delay: .4s;
         }
+
+        #uploader  {
+            display: none;
+        }
     </style>
 </head>
 
@@ -208,8 +212,10 @@
     </nav>
     <video autoplay="true" style="display:none;" id="videoElement"></video>
     <div id="button-container">
-        <button class="button" id="snapshot-button" onclick="snapShot()">SnapShot</button>
         <button class="button" id="modal-button"><a href="#summary-modal">How to</a></button>
+        <button class="button" id="snapshot-button" onclick="snapShot()">SnapShot</button>
+        <button class="button" id="upload-button" onclick="fileUpload()">Upload</button>
+        <input id="uploader" type="file" accept="image/*" value="Upload" on>
     </div>
     <div id="container">
         <div class="flex-item">
@@ -228,7 +234,7 @@
             <p>
                 This is a proof of concept web application that I created using OpenCV for face detection. <br />
                 Simply click the snapshot button while looking into your camera and your face should be outlined and
-                shown. <br />
+                shown. You can also upload an image to perform detection on it. <br />
                 You may have to remove any headphones or glasses and take the photo in decent lighting for better
                 results.
             </p>
@@ -290,9 +296,57 @@
             }, 0.1);
         });
 
+        document.getElementById("uploader").addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(event){
+                    var img = new Image();
+                    img.onload = function(){
+                        upload(resizeImage(img).toDataURL('image/webp'))
+                    }
+
+                    img.src = event.target.result;
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // returns canvas with smaller image
+        function resizeImage(image) {
+            var tempCanvas = document.createElement('canvas'),
+                    max_size = 500,
+                    width = image.width,
+                    height = image.height;
+                if (width > height) {
+                    if (width > max_size) {
+                        height *= max_size / width;
+                        width = max_size;
+                    }
+                } else {
+                    if (height > max_size) {
+                        width *= max_size / height;
+                        height = max_size;
+                    }
+                }
+                tempCanvas.width = width;
+                tempCanvas.height = height;
+                tempCanvas.getContext('2d').drawImage(image, 0, 0, width, height);
+                return tempCanvas
+        }
+        
+        function fileUpload()
+        {
+            $("#uploader").click();
+        }
+
         function snapShot() {
             //drawing = false;
             var pic = canvas.toDataURL('image/webp')
+            upload(pic);
+        }
+
+        function upload(pic) {
             document.getElementById("overlay").style.display = "block";
             return $.ajax({
                 type: "GET",
