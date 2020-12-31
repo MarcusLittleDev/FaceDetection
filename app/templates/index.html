@@ -349,7 +349,7 @@
         function upload(pic) {
             document.getElementById("overlay").style.display = "block";
             return $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/process_image",
                 data: {
                     image: pic

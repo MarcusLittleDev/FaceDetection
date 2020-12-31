@@ -12,5 +12,5 @@ def index():
 @app.route('/process_image/', methods=['GET', 'POST'])
 def process_image():
 
-    image = request.args.get('image', 0, type=str)
+    image = request.form['image']
     return detect_face(image)
