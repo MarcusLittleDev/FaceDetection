@@ -9,7 +9,7 @@ def index():
     return render_template('index.html', title='Face Detection')
 
 
-@app.route('/process_image/', methods=['GET', 'POST'])
+@app.route('/process_image/', methods=['POST'])
 def process_image():
 
     image = request.form['image']
