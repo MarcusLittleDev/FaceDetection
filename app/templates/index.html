@@ -315,7 +315,7 @@
         // returns canvas with smaller image
         function resizeImage(image) {
             var tempCanvas = document.createElement('canvas'),
-                    max_size = 250,
+                    max_size = 300,
                     width = image.width,
                     height = image.height;
                 if (width > height) {
@@ -349,7 +349,7 @@
         function upload(pic) {
             document.getElementById("overlay").style.display = "block";
             return $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/process_image",
                 data: {
                     image: pic
